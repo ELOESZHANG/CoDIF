@@ -134,15 +134,7 @@ Comparison with state-of-the-art methods on the nuScenes validation set. FPS mea
 
 | Method | Reference | Resolution | NDS | mAP | Params (M) | FPS |
 |--------|-----------|-----------|:---:|:---:|:----------:|:---:|
-| TransFusion | CVPR’22 | 800×448 | 71.7 | 68.9 | 37.0 | 6.51 |
-| BEVFusion (MIT) | ICRA’23 | 704×256 | 71.4 | 68.5 | 40.8 | 4.73 |
-| DeepInteraction | NeurIPS’22 | 800×448 | 72.6 | 69.9 | 57.9 | 1.86 |
-| SparseFusion | ICCV’23 | 704×256 | 72.8 | 70.5 | 40.2 | 4.38 |
-| UniTR | ICCV’23 | 704×256 | 73.3 | 70.5 | 15.6 | 4.50 |
-| CMT-VoV | ICCV’23 | 1600×640 | 72.9 | 70.3 | 86.7 | 3.48 |
-| DAL-Large | ECCV’24 | 1056×384 | 74.0 | 71.5 | 47.8 | 6.10 |
 | IS-Fusion | CVPR’24 | 1056×384 | 73.6 | 72.5 | 48.3 | 3.20 |
-| SparseLiF | ECCV’24 | 1600×640 | 74.6 | 71.2 | — | 2.9 |
 | MambaFusion-Base | ICCV’25 | 704×256 | 75.0 | 72.7 | — | 4.7 |
 | **CoDIF-Light (Ours)** | — | 704×256 | **73.5** | **70.7** | **18.2** | **4.18** |
 | **CoDIF (Ours)** | — | 704×256 | **75.4** | **73.3** | **35.5** | **3.06** |
@@ -157,21 +149,6 @@ Comparison with state-of-the-art methods on the nuScenes validation set. FPS mea
 ### nuScenes-C Robustness Benchmark
 
 CoDIF significantly outperforms baselines under sensor perturbations (misalignment, weather degradation, density reduction), demonstrating that soft alignment provides meaningful robustness gains where hard-alignment methods degrade substantially.
-
----
-
-## Method Overview
-
-CoDIF comprises three core components:
-
-### 1. Diffusion-driven Soft Fusion (DSF)
-DSF reformulates cross-modal alignment as a conditional denoising process. It learns to establish flexible correspondences between LiDAR and camera BEV features through a learnable UNet conditioned on the target modality, replacing rigid calibration-based projection. Physical sensor degradation patterns (vibration, calibration bias, thermal drift) are injected into the training noise schedule.
-
-### 2. Patch Context Encoder (PCE)
-PCE employs a DINO-style transformer to extract global scene context from the fused BEV features. A learnable context token interacts with all image patches through self-attention, capturing holistic scene semantics that guide local feature interpretation — especially valuable when local features are displaced by misalignment.
-
-### 3. Global Context Refinement (GCR) with Confidence Gating
-GCR applies Mamba-based multi-directional scanning (four scan directions) to capture long-range spatial dependencies. A hierarchical confidence gating mechanism operates at both intra-modality (pixel-level residual gate) and inter-modality (modality-level fusion gate) levels, adaptively weighting contributions based on per-pixel uncertainty.
 
 ### Training Modes
 
