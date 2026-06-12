@@ -52,14 +52,11 @@ pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https
 # Install extra dependency
 pip install -r requirements.txt
 
-pip install https://data.pyg.org/whl/torch-2.1.0%2Bcu118/torch_scatter-2.1.2%2Bpt21cu118-cp38-cp38-linux_x86_64.whl
-
 # Install nuscenes-devkit
 pip install nuscenes-devkit==1.0.5 torchinfo
 
 # Develop
 python setup.py develop
-python mambafusion_setup.py develop
 
 cd selective_scan
 python setup.py develop
