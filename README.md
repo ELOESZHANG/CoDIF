@@ -127,7 +127,6 @@ OpenPCDet
 
 Comparison with state-of-the-art methods on the nuScenes validation set. FPS measured on a single RTX 3090.
 
-![nuScenes Results](assets/results.png)
 
 | Method | Reference | Resolution | NDS | mAP | Params (M) | FPS |
 |--------|-----------|-----------|:---:|:---:|:----------:|:---:|
