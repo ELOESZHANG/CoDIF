@@ -92,9 +92,7 @@ python -m pcdet.datasets.nuscenes.nuscenes_dataset --func create_nuscenes_infos 
     --version v1.0-trainval \
     --with_cam \
     --with_cam_gt \
-    # --share_memory  # if using shared memory for LiDAR and image GT sampling (~24G+143G or 12G+72G)
-# Shared memory greatly improves training speed but needs ~150G or ~75G extra cache memory.
-# NOTE: All experiments used shared memory. Shared memory does NOT affect performance.
+
 ```
 
 - The format of the generated data is as follows:
