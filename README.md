@@ -197,7 +197,7 @@ python -m pcdet.datasets.kitti.kitti_dataset_custom create_kitti_infos cfgs/data
 | Dataset | Modality | mAP₃ᴰ (R40) | Easy | Moderate | Hard |
 |---------|:--------:|:----------:|:----:|:--------:|:----:|
 | KITTI Test | L+C | **86.12** | 92.25 | 85.47 | 80.65 |
-| KITTI Val (Checkpoint [https://huggingface.co/GGboy-ues/CoDIF/tree/main/kitti-val-pth]) | L+C | **91.09** | 96.24 | 89.85 | 87.19 |
+| KITTI Val ([Checkpoint](https://huggingface.co/GGboy-ues/CoDIF/tree/main/kitti-val-pth)) | L+C | **91.09** | 96.24 | 89.85 | 87.19 |
 
 ### nuScenes Validation Set
 
@@ -205,8 +205,8 @@ python -m pcdet.datasets.kitti.kitti_dataset_custom create_kitti_infos cfgs/data
 |--------|-----------|-----------|:---:|:---:|:----------:|:---:|
 | IS-Fusion | CVPR'24 | 1056×384 | 73.6 | 72.5 | 48.3 | 3.20 |
 | MambaFusion-Base | ICCV'25 | 704×256 | 75.0 | 72.7 | — | 4.7 |
-| **CoDIF-Light (Ours)** | — | 704×256 | 73.5 | 70.7 | 18.2 | 4.18 |
-| **CoDIF (Ours)** | — | 704×256 | **75.4** | **73.3** | **35.5** | **3.06** |
+| **CoDIF-Light** | — | 704×256 | 73.5 | 70.7 | 18.2 | 4.18 |
+| **CoDIF[Checkpoint](https://huggingface.co/GGboy-ues/CoDIF/tree/main/nuScenes-val-test-pth)** | — | 704×256 | **75.4** | **73.3** | **35.5** | **3.06** |
 
 ### nuScenes-C Robustness Benchmark
 
