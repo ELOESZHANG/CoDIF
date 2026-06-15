@@ -206,7 +206,7 @@ python -m pcdet.datasets.kitti.kitti_dataset_custom create_kitti_infos cfgs/data
 | IS-Fusion | CVPR'24 | 1056×384 | 73.6 | 72.5 | 48.3 | 3.20 |
 | MambaFusion-Base | ICCV'25 | 704×256 | 75.0 | 72.7 | — | 4.7 |
 | **CoDIF-Light** | — | 704×256 | 73.5 | 70.7 | 18.2 | 4.18 |
-| **CoDIF ([Checkpoint](https://huggingface.co/GGboy-ues/CoDIF/tree/main/nuScenes-val-test-pth))** | — | 704×256 | **75.4** | **73.3** | **35.5** | **3.06** |
+| **CoDIF ([Checkpoint](https://huggingface.co/GGboy-ues/CoDIF/tree/main/nuScenes-val-test-pth))** | — | 704×256 | **75.4** | **73.3** | 35.5 | 3.06 |
 
 ### nuScenes-C Robustness Benchmark
 
