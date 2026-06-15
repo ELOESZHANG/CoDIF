@@ -232,7 +232,7 @@ The framework supports three operational modes controlled by `MODEL.FUSER.TRAIN_
 
 #### Stage 1 — Detection Backbone Training
 
-Start by downloading the [Vmamba pretrained weights](https://drive.google.com/drive/folders/1TqvpIHA7plzoFdnGWvFgVYr45bgz-nQ3?usp=sharing).
+Start by downloading the [Vmamba pretrained weights](https://huggingface.co/GGboy-ues/CoDIF/tree/main/Vmamba-pretrain).
 
 ```bash
 cd tools
