@@ -286,8 +286,6 @@ CUDA_VISIBLE_DEVICES='0' python -m torch.distributed.launch \
     --fix_random_seed
 ```
 
-
-
 **Train diffusion model:**
 
 ```bash
@@ -314,6 +312,7 @@ CUDA_VISIBLE_DEVICES='1' python -m torch.distributed.launch \
     --fix_random_seed \
     --pretrained_model ../output/kitti_models/mpcf_codiff/default/ckpt/checkpoint_epoch_53.pth
 ```
+
 
 
 ---
