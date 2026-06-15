@@ -197,7 +197,7 @@ python -m pcdet.datasets.kitti.kitti_dataset_custom create_kitti_infos cfgs/data
 | Dataset | Modality | mAP₃ᴰ (R40) | Easy | Moderate | Hard |
 |---------|:--------:|:----------:|:----:|:--------:|:----:|
 | KITTI Test | L+C | **86.12** | 92.25 | 85.47 | 80.65 |
-| KITTI Val | L+C | **91.09** | 96.24 | 89.85 | 87.19 |
+| KITTI Val (Checkpoint [https://huggingface.co/GGboy-ues/CoDIF/tree/main/kitti-val-pth]) | L+C | **91.09** | 96.24 | 89.85 | 87.19 |
 
 ### nuScenes Validation Set
 
