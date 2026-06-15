@@ -28,7 +28,7 @@ We present CoDIF, a multimodal 3D object detection framework that replaces rigid
 
 ## Overview
 
-![CoDIF Overview](assets/main.png)
+![CoDIF Overview](Figs/Figure1.jpg)
 
 ---
 
