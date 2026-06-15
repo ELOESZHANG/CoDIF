@@ -23,7 +23,7 @@
 
 ## Abstract
 
-We present CoDIF, a multimodal 3D object detection framework that replaces rigid calibration-based alignment with a **soft alignment** mechanism via conditional diffusion fusion. 
+We present CoDIF, a multimodal 3D object detection framework that replaces rigid calibration-based alignment with a **soft alignment** mechanism via conditional diffusion fusion.
 
 
 ## Overview
@@ -40,11 +40,14 @@ We present CoDIF, a multimodal 3D object detection framework that replaces rigid
 
 ## Installation
 
+### NuScenes Setup
+
+If you encounter any problems, please consult the [install.md](docs/install.md) file for the exact version requirements of each package. If the issue still isn't resolved, feel free to open an issue.
 
 ```bash
 conda create -n codif python=3.8
 
-# You can install CUDA 11.8 (if it isn’t already on your system) by running:
+# You can install CUDA 11.8 (if it isn't already on your system) by running:
 # conda install --channel "nvidia/label/cuda-11.8.0" cuda
 pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118
 
@@ -66,9 +69,42 @@ python setup.py develop
 python -m pip install causal-conv1d==1.2.0.post2
 ```
 
+### KITTI Setup
+
+You can either use the docker image provided by [Voxel-R-CNN](https://github.com/djiajunustc/Voxel-R-CNN), or follow the installation steps in [OpenPCDet](https://github.com/open-mmlab/OpenPCDet). Our experiments are based on the docker provided by Voxel-R-CNN using 8 TITAN V GPUs to train the SFD backbone.
+
+```bash
+conda create -n codif_kitti python=3.8
+conda activate codif_kitti
+
+pip install torch==2.0.1+cu117 torchvision==0.15.2+cu117 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cu117
+pip install spconv-cu113
+pip install -r requirements.txt
+python -m pip install causal-conv1d==1.2.0.post2
+
+python setup.py develop
+
+cd pcdet/ops/iou3d/cuda_op
+python setup.py develop
+
+cd pcdet/ops/mamba
+python setup.py install
+
+cd Thop_FLOPs/pytorch-OpCounter-master
+pip install .
+
+pip install matplotlib open3d
+pip install flash-attn --no-build-isolation
+pip install xformers==0.0.20
+```
+
+---
+
 ## Dataset Preparation
 
-- Please download the official [NuScenes 3D object detection dataset](https://www.nuscenes.org/download) and organize the downloaded files as follows:
+### NuScenes
+
+Please download the official [NuScenes 3D object detection dataset](https://www.nuscenes.org/download) and organize the downloaded files as follows:
 
 ```
 OpenPCDet
@@ -94,7 +130,7 @@ python -m pcdet.datasets.nuscenes.nuscenes_dataset --func create_nuscenes_infos 
 
 ```
 
-- The format of the generated data is as follows:
+The format of the generated data is as follows:
 
 ```
 OpenPCDet
@@ -116,21 +152,49 @@ OpenPCDet
 ├── tools
 ```
 
+### KITTI
+
+Please prepare the KITTI dataset as described in [Voxel-R-CNN](https://github.com/djiajunustc/Voxel-R-CNN) or [OpenPCDet](https://github.com/open-mmlab/OpenPCDet). Then replace the corresponding folders and files with those we provide in [Google Drive](https://drive.google.com/drive/folders/1nrgj1pAYGfNSb3MPLrkuLW27WWyJc68a?usp=sharing) / [Baidu Netdisk](https://pan.baidu.com/s/1uq-xD6e5mGUdYm7ROvV6Jw?pwd=swre) (unzip before replacing).
+
+The `depth_dense_twise` folder contains dense depth maps, and the `depth_pseudo_rgbseguv_twise` folder contains pseudo point clouds. Generate pseudo point clouds from dense depth maps:
+
+```bash
+cd SFD
+python depth_to_lidar.py
+```
+
+If you want to generate dense depth maps by yourself, we recommend using [TWISE](https://github.com/imransai/TWISE) or [SFD-TWISE](https://github.com/LittlePey/SFD-TWISE). Organize your dataset as follows:
+
+```
+SFD
+├── data
+│   ├── kitti_pseudo
+│   │   │── ImageSets
+│   │   │── training
+│   │   │   ├── calib & velodyne & label_2 & image_2 & (optional: planes) & depth_dense_twise & depth_pseudo_rgbseguv_twise
+│   │   │── testing
+│   │   │   ├── calib & velodyne & image_2 & depth_dense_twise & depth_pseudo_rgbseguv_twise
+│   │   │── gt_database
+│   │   │── gt_database_pseudo_seguv
+│   │   │── kitti_dbinfos_train_sfd_seguv.pkl
+│   │   │── kitti_infos_test.pkl
+│   │   │── kitti_infos_train.pkl
+│   │   │── kitti_infos_trainval.pkl
+│   │   │── kitti_infos_val.pkl
+├── pcdet
+├── tools
+```
+
+Generate KITTI dataset infos and ground-truth database:
+
+```bash
+cd tools
+python -m pcdet.datasets.kitti.kitti_dataset_custom create_kitti_infos cfgs/dataset_configs/kitti_dataset_custom.yaml
+```
+
 ---
 
 ## 🏆 Main Results
-
-### nuScenes Validation Set
-
-Comparison with state-of-the-art methods on the nuScenes validation set. FPS measured on a single RTX 3090.
-
-
-| Method | Reference | Resolution | NDS | mAP | Params (M) | FPS |
-|--------|-----------|-----------|:---:|:---:|:----------:|:---:|
-| IS-Fusion | CVPR’24 | 1056×384 | 73.6 | 72.5 | 48.3 | 3.20 |
-| MambaFusion-Base | ICCV’25 | 704×256 | 75.0 | 72.7 | — | 4.7 |
-| **CoDIF-Light (Ours)** | — | 704×256 | **73.5** | **70.7** | **18.2** | **4.18** |
-| **CoDIF (Ours)** | — | 704×256 | **75.4** | **73.3** | **35.5** | **3.06** |
 
 ### KITTI Validation & Test Sets
 
@@ -139,9 +203,22 @@ Comparison with state-of-the-art methods on the nuScenes validation set. FPS mea
 | KITTI Test | L+C | **86.12** | 92.25 | 85.47 | 80.65 |
 | KITTI Val | L+C | **91.09** | 96.24 | 89.85 | 87.19 |
 
+### nuScenes Validation Set
+
+| Method | Reference | Resolution | NDS | mAP | Params (M) | FPS |
+|--------|-----------|-----------|:---:|:---:|:----------:|:---:|
+| IS-Fusion | CVPR'24 | 1056×384 | 73.6 | 72.5 | 48.3 | 3.20 |
+| MambaFusion-Base | ICCV'25 | 704×256 | 75.0 | 72.7 | — | 4.7 |
+| **CoDIF-Light (Ours)** | — | 704×256 | 73.5 | 70.7 | 18.2 | 4.18 |
+| **CoDIF (Ours)** | — | 704×256 | **75.4** | **73.3** | **35.5** | **3.06** |
+
 ### nuScenes-C Robustness Benchmark
 
-CoDIF significantly outperforms baselines under sensor perturbations (misalignment, weather degradation, density reduction), demonstrating that soft alignment provides meaningful robustness gains where hard-alignment methods degrade substantially.
+| Method | Clean | Snow | Rain | Fog | Sunlight | Density | Cutout | Crosstalk |
+|--------|:----:|:----:|:----:|:---:|:--------:|:------:|:-----:|:---------:|
+| Baseline | 71.53 | 68.34 | 66.43 | 69.45 | 67.69 | 70.95 | 69.60 | 68.69 |
+| **CoDIF (Ours)** | **73.28** | **69.96** | **68.85** | **70.62** | **69.44** | **71.91** | **71.08** | **70.04** |
+
 
 ### Training Modes
 
@@ -155,16 +232,18 @@ The framework supports three operational modes controlled by `MODEL.FUSER.TRAIN_
 
 ## Training
 
-### Stage 1 — Detection Backbone Training
+### NuScenes
 
-Start by downloading the [pretrained weights](https://drive.google.com/drive/folders/1TqvpIHA7plzoFdnGWvFgVYr45bgz-nQ3?usp=sharing).
+#### Stage 1 — Detection Backbone Training
+
+Start by downloading the [Vmamba pretrained weights](https://drive.google.com/drive/folders/1TqvpIHA7plzoFdnGWvFgVYr45bgz-nQ3?usp=sharing).
 
 ```bash
 cd tools
 bash scripts/dist_train.sh 3 --cfg_file cfgs/nuscenes_models/Codiff.yaml --sync_bn --pretrained_model ckpts/pretrained.pth --logger_iter_interval 100
 ```
 
-### Stage 2 — Diffusion Model Training
+#### Stage 2 — Diffusion Model Training
 
 ```bash
 cd tools
@@ -173,14 +252,14 @@ python -m torch.distributed.launch --nproc_per_node=4 --master_port 25530 train_
     --save_dir ../output/DIff_checkpoints_physical
 ```
 
-### Stage 3 — Finetune
+#### Stage 3 — Finetune
 
 ```bash
 cd tools
 bash scripts/dist_train.sh 3 --cfg_file cfgs/nuscenes_models/Codiff_finetune.yaml --sync_bn --pretrained_model ckpts/pretrained.pth --logger_iter_interval 500
 ```
 
-### Lightweight Variant
+#### Lightweight Variant
 
 For the lightweight variant (CoDIF-Light), replace the config files with the `_light` versions:
 
@@ -189,14 +268,99 @@ cd tools
 bash scripts/dist_train.sh 3 --cfg_file cfgs/nuscenes_models/Codiff_light.yaml --sync_bn --pretrained_model ckpts/pretrained.pth
 ```
 
+### KITTI
+
+All training / evaluation commands below should be run from the `tools/` directory under `CoDIF-KITTI`.
+
+**Train CoDIF (main model) on KITTI val set:**
+
+```bash
+cd tools
+
+CUDA_VISIBLE_DEVICES='0' python -m torch.distributed.launch \
+    --nnodes 1 --nproc_per_node=1 --master_port 25511 train.py \
+    --gpu_id 0 --launch 'pytorch' --workers 4 \
+    --batch_size 1 --cfg_file cfgs/kitti_models/mpcf_codiff.yaml \
+    --tcp_port 61000 \
+    --epoch 20 --max_ckpt_save_num 20 \
+    --fix_random_seed
+```
+
+
+
+**Train diffusion model:**
+
+```bash
+cd tools
+
+CUDA_VISIBLE_DEVICES='0' python -m torch.distributed.launch \
+    --nproc_per_node=1 --master_port 25530 train_diffv1.py \
+    --num_epochs 1000 --batch_size 1 --save_every 5 \
+    --lr 1e-4 --lr_scheduler cosine \
+    --save_dir ../output/DIff_checkpoints_physical
+```
+
+**Finetune:**
+
+```bash
+cd tools
+
+CUDA_VISIBLE_DEVICES='1' python -m torch.distributed.launch \
+    --nnodes 1 --nproc_per_node=1 --master_port 25530 train.py \
+    --gpu_id 1 --launch 'pytorch' --workers 8 \
+    --batch_size 1 --cfg_file cfgs/kitti_models/mpcf_codiff.yaml \
+    --tcp_port 61000 \
+    --epoch 30 --max_ckpt_save_num 25 \
+    --fix_random_seed \
+    --pretrained_model ../output/kitti_models/mpcf_codiff/default/ckpt/checkpoint_epoch_53.pth
+```
+
+
 ---
 
 ## Inference
+
+### NuScenes
 
 ```bash
 cd tools
 bash scripts/dist_test.sh 3 --cfg_file cfgs/nuscenes_models/Codiff_test.yaml --ckpt path/to/checkpoint.pth
 ```
+
+### KITTI
+
+**Evaluate all checkpoints on KITTI val set:**
+
+```bash
+cd tools
+
+CUDA_VISIBLE_DEVICES='0' python test.py \
+    --gpu_id 0 --workers 4 \
+    --cfg_file cfgs/kitti_models/mpcf_codiff_test.yaml \
+    --batch_size 1 --eval_all
+```
+
+**Evaluate with a specific checkpoint on KITTI val set:**
+
+```bash
+cd tools
+
+CUDA_VISIBLE_DEVICES='1' python test.py \
+    --gpu_id 1 --workers 0 \
+    --cfg_file cfgs/kitti_models/mpcf_codiff_test.yaml \
+    --batch_size 1 \
+    --ckpt ../output/kitti_models/mpcf_codiff/default/ckpt/checkpoint_epoch_14.pth
+```
+
+---
+
+## 🗂️ Available Configurations (KITTI)
+
+Model configs are located in `tools/cfgs/kitti_models/`:
+Dataset configs are located in `tools/cfgs/dataset_configs/`:
+- `kitti_dataset.yaml` — KITTI dataset config
+- `kitti_dataset_custom.yaml` — Custom KITTI (with pseudo-lidar / dense depth)
+- `nuscenes_dataset.yaml` — nuScenes dataset config
 
 ---
 
@@ -226,4 +390,3 @@ CoDIF uses code from several open source repositories. We gratefully acknowledge
 - [VoxelMamba](https://github.com/gwenzhang/Voxel-Mamba)
 - [LION](https://github.com/happinesslz/LION)
 - [UniTR](https://github.com/Haiyang-W/UniTR)
-
