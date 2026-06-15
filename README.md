@@ -40,7 +40,6 @@ We present CoDIF, a multimodal 3D object detection framework that replaces rigid
 
 ## Installation
 
-If you encounter any problems, please consult the [install.md](docs/install.md) file for the exact version requirements of each package. If the issue still isn’t resolved, feel free to open an issue.
 
 ```bash
 conda create -n codif python=3.8
