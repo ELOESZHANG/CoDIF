@@ -71,8 +71,6 @@ python -m pip install causal-conv1d==1.2.0.post2
 
 ### KITTI Setup
 
-You can either use the docker image provided by [Voxel-R-CNN](https://github.com/djiajunustc/Voxel-R-CNN), or follow the installation steps in [OpenPCDet](https://github.com/open-mmlab/OpenPCDet). Our experiments are based on the docker provided by Voxel-R-CNN using 8 TITAN V GPUs to train the SFD backbone.
-
 ```bash
 conda create -n codif_kitti python=3.8
 conda activate codif_kitti
